@@ -1,0 +1,13 @@
+Make,total_claims,fraud_claims,fraud_rate_pct
+Accura,472,59,12.5
+Saturn,58,6,10.34
+Saab,108,11,10.19
+Ford,450,33,7.33
+Mercury,83,6,7.23
+Honda,2800,179,6.39
+Toyota,3121,186,5.96
+Chevrolet,1681,94,5.59
+Pontiac,3837,213,5.55
+Mazda,2354,123,5.23
+VW,283,8,2.83
+Dodge,109,2,1.83

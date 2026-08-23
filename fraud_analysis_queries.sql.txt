@@ -1,0 +1,72 @@
+-- ============================================
+-- Insurance Fraud Analysis Queries
+-- Database: insurance_fraud.db (SQLite)
+-- Table: claims
+-- ============================================
+
+-- 1. Fraud rate by vehicle make
+SELECT Make, 
+       COUNT(*) as total_claims,
+       SUM(FraudFound_P) as fraud_claims,
+       ROUND(100.0 * SUM(FraudFound_P) / COUNT(*), 2) as fraud_rate_pct
+FROM claims
+GROUP BY Make
+HAVING total_claims > 50
+ORDER BY fraud_rate_pct DESC;
+
+
+-- 2. Fraud rate by policy type
+SELECT PolicyType,
+       COUNT(*) as total_claims,
+       SUM(FraudFound_P) as fraud_claims,
+       ROUND(100.0 * SUM(FraudFound_P) / COUNT(*), 2) as fraud_rate_pct
+FROM claims
+GROUP BY PolicyType
+ORDER BY fraud_rate_pct DESC;
+
+
+-- 3. Fraud rate by month (seasonality check)
+SELECT Month,
+       COUNT(*) as total_claims,
+       SUM(FraudFound_P) as fraud_claims,
+       ROUND(100.0 * SUM(FraudFound_P) / COUNT(*), 2) as fraud_rate_pct
+FROM claims
+GROUP BY Month
+ORDER BY fraud_rate_pct DESC;
+
+
+-- 4. Fraud rate by fault (policy holder vs third party)
+SELECT Fault,
+       COUNT(*) as total_claims,
+       SUM(FraudFound_P) as fraud_claims,
+       ROUND(100.0 * SUM(FraudFound_P) / COUNT(*), 2) as fraud_rate_pct
+FROM claims
+GROUP BY Fault
+ORDER BY fraud_rate_pct DESC;
+
+
+-- 5. Window function: rank vehicle makes by fraud rate
+SELECT Make,
+       COUNT(*) as total_claims,
+       SUM(FraudFound_P) as fraud_claims,
+       ROUND(100.0 * SUM(FraudFound_P) / COUNT(*), 2) as fraud_rate_pct,
+       RANK() OVER (ORDER BY ROUND(100.0 * SUM(FraudFound_P) / COUNT(*), 2) DESC) as fraud_rank
+FROM claims
+GROUP BY Make
+HAVING total_claims > 50;
+
+
+-- 6. CTE: fraud rate by past claims history
+WITH claim_history AS (
+    SELECT PastNumberOfClaims_encoded,
+           COUNT(*) as total_claims,
+           SUM(FraudFound_P) as fraud_claims
+    FROM claims
+    GROUP BY PastNumberOfClaims_encoded
+)
+SELECT PastNumberOfClaims_encoded,
+       total_claims,
+       fraud_claims,
+       ROUND(100.0 * fraud_claims / total_claims, 2) as fraud_rate_pct
+FROM claim_history
+ORDER BY PastNumberOfClaims_encoded;

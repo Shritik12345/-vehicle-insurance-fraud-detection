@@ -1,0 +1,10 @@
+PolicyType,total_claims,fraud_claims,fraud_rate_pct
+Sport - Collision,348,48,13.79
+Utility - All Perils,340,41,12.06
+Sedan - All Perils,4086,411,10.06
+Utility - Collision,30,3,10.0
+Sedan - Collision,5584,384,6.88
+Sedan - Liability,4987,36,0.72
+Utility - Liability,21,0,0.0
+Sport - Liability,1,0,0.0
+Sport - All Perils,22,0,0.0
